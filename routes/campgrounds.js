@@ -59,24 +59,29 @@ router.get("/:id", function(req, res){
         }
     });
 });
-//create
-router.put("/:id",middleware.checkCampgroundOwnership,function(req,res){
-    var data = res.body.campground;
-    Campground.findByIdAndUpdate(req.params.id,data,function(err,updatedCampground){
-        if(err){
-            res.redirect("/campgrounds");
-        }else{
-            res.redirect("/campgrounds/"+req.params.id);
-        }
-    })
-})
+
 //edit
-router.get("/:id/edit",middleware.checkCampgroundOwnership,function(req, res){
-    Campground.findById(req.params.id,function(err,foundCampground){
-            res.render("campgrounds/edit",{campground:foundCampground}); 
-            });
-        });
-   
+router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req, res){
+    Campground.findById(req.params.id, function(err, foundCampground){
+        if(err || !foundCampground){
+            console.log(err);
+            req.flash("error","Campground not find");
+        }
+        res.render("campgrounds/edit", {campground: foundCampground});
+    });
+});
+//UPDATE
+router.put("/:id",middleware.checkCampgroundOwnership, function(req, res){
+    // find and update the correct campground
+    Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
+       if(err){
+           res.redirect("/campgrounds");
+       } else {
+           //redirect somewhere(show page)
+           res.redirect("/campgrounds/" + req.params.id);
+       }
+    });
+});
     
 
 
