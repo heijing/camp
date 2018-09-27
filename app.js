@@ -17,8 +17,8 @@ var commentRoutes    = require("./routes/comments"),
     indexRoutes      = require("./routes/index")
  
  var url = process.env.DATABASEURL || "mongodb://localhost/yelp_camp_v9"
- mongoose.connect(url); 
-//mongoose.connect("mongodb://localhost/yelp_camp_v9");
+ //mongoose.connect(url); 
+mongoose.connect("mongodb://localhost/yelp_camp_v9");
 //mongoose.connect("mongodb://dal131:641107dandanyang@ds211083.mlab.com:11083/yelpcampdal131")
 //process.env.databaseURL
 app.use(bodyParser.urlencoded({extended: true}));
@@ -34,6 +34,7 @@ app.use(require("express-session")({
     saveUninitialized: false
 }));
 app.use(flash());
+app.locals.moment = require('moment');
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
